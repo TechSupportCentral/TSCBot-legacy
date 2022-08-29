@@ -23,7 +23,6 @@ if __name__ == "__main__":
 
     @bot.event
     async def on_ready():
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='TSC'))
         print('Logged in as ' + bot.user.name)
 
     async def run_bot():

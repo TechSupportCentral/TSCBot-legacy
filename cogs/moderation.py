@@ -41,49 +41,6 @@ class moderation(commands.Cog):
     global channel_ids
     channel_ids = config['channel_ids']
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        async def resume_mute(self, mute):
-            id = int(mute['user'])
-            end = int(mute['start']) + int(mute['time'])
-            now = int(datetime.now().strftime("%s"))
-            fancytime = await seconds_to_fancytime(int(mute['time']), 4)
-
-            if self.bot.guilds[0].get_member(id) is None:
-                return
-            user = self.bot.guilds[0].get_member(id)
-            muted_role = self.bot.guilds[0].get_role(int(role_ids['muted']))
-            channel = self.bot.get_channel(int(channel_ids['modlog']))
-
-            print(f"Resuming mute of {fancytime} for {user}")
-            await sleep(end - now)
-            if not muted_role in user.roles:
-                return
-
-            dmbed = discord.Embed(title="You have been automatically unmuted.", color=discord.Color.green())
-            dm_failed = False
-            try:
-                await user.dm_channel.send(embed=dmbed)
-            except:
-                dm_failed = True
-
-            embed = discord.Embed(title="Mute Removed", color=discord.Color.green())
-            embed.set_thumbnail(url=user.display_avatar)
-            embed.add_field(name="User unmuted", value=user, inline=True)
-            embed.add_field(name="User ID", value=str(id), inline=True)
-            embed.add_field(name="Reason", value="Automatic unmute", inline=False)
-            if dm_failed:
-                embed.set_footer(text="was unable to DM user")
-            await channel.send(embed=embed)
-            await user.remove_roles(muted_role)
-
-        collection = mongodb['moderation']
-        for mute in collection.find({"type": "mute"}):
-            end = int(mute['start']) + int(mute['time'])
-            now = int(datetime.now().strftime("%s"))
-            if end > now:
-                await resume_mute(self, mute)
-
     @commands.command()
     async def purge(self, ctx, arg=None):
         guild = ctx.message.guild

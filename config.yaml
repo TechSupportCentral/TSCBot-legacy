@@ -1,75 +1,24 @@
 token: "insert token here"
-pcpp_cookie: "insert PCPartPicker cookie here"
 mongo_uri: "insert MongoDB URI here"
 mongo_db: "TSCBot"
 prefix: "!"
 
 role_ids:
     owner: 824063311829925898
-    tsc: 853429599937101835
     moderator: 824056092899934218
     trial_mod: 824067621841666099
     support_team: 824064404340473896
-    og: 916113285236031519
-    bump_reminders: 825049916413444196
     muted: 824589460850606090
 
 channel_ids:
-    welcome: 824060103119470622
     rules: 824045801725493258
-    general_support: 824059680905101333
-    software_support: 824059831513907200
-    hardware_support: 824059920826499093
-    mobile_support: 824059755935957023
-    vc_chat: 824061207924965416
     general: 824042976371277888
-    games: 824059985998381138
-    setups: 824737989850169355
-    memes: 824738477291601980
-    music: 824067063941300224
-    bot_commands: 832535838289297408
-    suggestions: 824926277868978186
     suggestions_list: 824677631181062196
     ticket_create: 824684376398233670
-    new_staff: 824592203762499674
     staff_news: 825308035697082398
-    modtalk: 824057837491453982
     modlog: 824194262279127060
-    filter_log: 835519322909573190
     reaction_roles: 828029618438275132
-    invites: 833815923457654844
-    member_changed: 824319260540010557
-    name_changed: 825773983000690698
-    message_edit: 825774068313358346
-    message_deleted: 825774127661973545
-    role_changed: 825785679220703243
-    channel_deleted: 825786991450259466
-    channel_created: 825787041664073739
-    role_deleted: 825787981435502612
     bot_dm: 853984661360869386
 
 message_ids:
     rules: 996652911650152498
-    reaction_role_bump: 891857181757046855
-
-support_channels:
-  - "general_support"
-  - "software_support"
-  - "hardware_support"
-  - "mobile_support"
-  - "vc_chat"
-
-public_channels:
-  - "general_support"
-  - "software_support"
-  - "hardware_support"
-  - "mobile_support"
-  - "vc_chat"
-  - "general"
-  - "games"
-  - "setups"
-  - "memes"
-  - "music"
-  - "bot_commands"
-  - "suggestions"
-  - "ticket_create"

@@ -41,39 +41,6 @@ class misc(commands.Cog):
     global role_ids
     role_ids = config['role_ids']
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        async def remind(self, collection, reminder):
-            text = reminder['text']
-            total = reminder['time']
-            id = int(reminder['user'])
-            end = int(reminder['end'])
-            now = int(datetime.now().strftime("%s"))
-
-            if self.bot.guilds[0].get_member(id) is None:
-                collection.delete_one({"_id": reminder['_id']})
-                return
-            user = self.bot.guilds[0].get_member(id)
-
-            if end > now:
-                print(f"Resuming reminder of {total} from {user}")
-                await sleep(end - now)
-                embed = discord.Embed(title=f"Reminder from {total} ago:", description=text, color=0x00a0a0)
-            else:
-                print(f"Sending belated reminder of {total} from {user}")
-                embed = discord.Embed(title="Belated reminder", description=f"Sorry, it looks like the bot was offline when you were supposed to get your reminder (should've lasted {total}).\n\nHere was the reminder:\n{text}", color=0x00a0a0)
-            collection.delete_one({"_id": reminder['_id']})
-
-            if user.dm_channel is None:
-                dm = await user.create_dm()
-            else:
-                dm = user.dm_channel
-            await dm.send(embed=embed)
-
-        collection = mongodb['reminders']
-        for reminder in collection.find():
-            await remind(self, collection, reminder)
-
     @commands.command()
     async def alert(self, ctx, *, description=None):
         if description:
