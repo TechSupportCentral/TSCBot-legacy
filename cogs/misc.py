@@ -41,6 +41,37 @@ class misc(commands.Cog):
     global role_ids
     role_ids = config['role_ids']
 
+    @commands.command(name='commands')
+    async def _commands(self, ctx, arg=None):
+        with open('commands.yaml', 'r') as commands_file:
+            commands = yaml.load(commands_file, Loader=yaml.BaseLoader)
+
+        if not arg:
+            embed = discord.Embed(title="Command List", description="Commands come in categories. Here is a list of categories, run `!commands <category>` to see the commands in a certain category.", color=0x00a0a0)
+            embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar)
+            for category in commands:
+                if not '_desc' in category:
+                    embed.add_field(name=category + ':', value=commands[category + '_desc'], inline=True)
+            await ctx.send(embed=embed)
+        elif arg in commands:
+            guild = ctx.message.guild
+            mod_role = guild.get_role(int(role_ids['moderator']))
+            trial_role = guild.get_role(int(role_ids['trial_mod']))
+            owner_role = guild.get_role(int(role_ids['owner']))
+            if arg == "moderation" and not mod_role in ctx.author.roles and not trial_role in ctx.author.roles:
+                await ctx.send("The `moderation` category can only be viewed by moderators.")
+                return
+            elif arg == "administration" and not owner_role in ctx.author.roles:
+                await ctx.send("The `administration` category can only be viewed by admins.")
+                return
+            embed = discord.Embed(title="Command List", description=f"Commands in the {arg} category:", color=0x00a0a0)
+            embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar)
+            for command in commands[arg]:
+                embed.add_field(name=command + ':', value=commands[arg][command], inline=False)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send('Please send a valid category')
+
     @commands.command()
     async def alert(self, ctx, *, description=None):
         if description:
@@ -53,18 +84,6 @@ class misc(commands.Cog):
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         await channel.send(f"<@&{role_ids['moderator']}> <@&{role_ids['trial_mod']}>", embed=embed)
         await ctx.send("The moderators have been alerted.")
-
-    @commands.command()
-    async def suggest(self, ctx, *, suggestion=None):
-        if not suggestion:
-            await ctx.send("Please provide a suggestion.")
-            return
-        embed = discord.Embed(description=f"**Suggestion:** {suggestion}", color=discord.Color.lighter_grey())
-        embed.set_author(name=ctx.author, icon_url=ctx.author.display_avatar)
-        embed.add_field(name="Status", value="Pending")
-        channel = self.bot.get_channel(int(channel_ids['suggestions_list']))
-        await channel.send(embed=embed)
-        await ctx.message.add_reaction("✅")
 
     @commands.command()
     async def remindme(self, ctx, time=None, *, reminder=None):
@@ -95,27 +114,6 @@ class misc(commands.Cog):
         else:
             dm = ctx.message.author.dm_channel
         await dm.send(embed=embed)
-
-    @commands.command()
-    async def shorten(self, ctx, link=None):
-        if not link:
-            await ctx.send("Please specify a link to shorten.")
-            return
-
-        if re.search(r"https?:\/\/(www\.)?amazon\.[^\/]*", link) and re.search(r"\/dp\/B0[\dA-Z]{8}\/", link):
-            amazon = re.search(r"amazon\.[^\/]*", link).group()
-            dp = re.search(r"\/dp\/B0[0-9A-Z]{8}\/", link).group()
-            await ctx.send("https://" + amazon + dp)
-
-        elif re.search(r"https?:\/\/(www\.)?youtube\.com", link) and re.search(r"(\?|&)v=[\d\w-]{11}", link):
-            v = re.search(r"(\?|&)v=[\d\w-]{11}", link).group()[3:]
-
-            if re.search(r"(\?|&)t=\d+", link):
-                t = "&" + re.search(r"(\?|&)t=\d+", link).group()[1:]
-            else:
-                t = ""
-
-            await ctx.send("https://youtu.be/" + v + t)
 
 async def setup(bot):
     await bot.add_cog(misc(bot))

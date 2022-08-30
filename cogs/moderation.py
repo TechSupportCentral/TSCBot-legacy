@@ -42,31 +42,35 @@ class moderation(commands.Cog):
     channel_ids = config['channel_ids']
 
     @commands.command()
-    async def purge(self, ctx, arg=None):
+    async def purge(self, ctx, num=None, *, reason=None):
         guild = ctx.message.guild
         mod_role = guild.get_role(int(role_ids['moderator']))
         if not mod_role in ctx.message.author.roles:
             await ctx.send("You do not have permission to run this command.")
             return
 
-        if not arg:
+        if not num:
             await ctx.send("Please mention a number of messages to purge.")
             return
-        elif arg.isdigit():
-            arg = int(arg)
+        elif num.isdigit():
+            num = int(num)
         else:
             await ctx.send("Not a valid number of messages")
             return
 
-        if arg > 100:
+        if num > 100:
             await ctx.send("You can only delete 100 or fewer messages at once.")
             return
 
-        await ctx.channel.purge(limit=arg)
-        embed=discord.Embed(title=str(arg - 1) + " Messages Deleted", color=discord.Color.red())
+        if not reason:
+            reason = "No reason provided."
+
+        await ctx.channel.purge(limit=num + 1)
+        embed=discord.Embed(title=f"{num} Messages Deleted", color=discord.Color.red())
         embed.set_thumbnail(url=ctx.message.author.display_avatar)
         embed.add_field(name="Deleted by", value=ctx.message.author, inline=True)
         embed.add_field(name="In channel", value=ctx.message.channel.mention, inline=True)
+        embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         await channel.send(embed=embed)
 
@@ -156,7 +160,7 @@ class moderation(commands.Cog):
         for warning in collection.find():
             if warning['user'] == str(id):
                 found = True
-                number = number + 1
+                number += 1
                 description = description + f"\n`{number}`:\n**Type:** {warning['type']}\n**Reason:** {warning['reason']}\n**Moderator:** {guild.get_member(int(warning['moderator']))}\n**Message ID:** {warning['_id']}\n"
         if not found:
             await ctx.send("This user has no warnings.")
@@ -676,7 +680,7 @@ class moderation(commands.Cog):
 
         await member.remove_roles(muted_role)
         if dm_failed:
-            await ctx.send("The member was warned successfully, but a DM was unable to be sent.")
+            await ctx.send("The member was unmuted successfully, but a DM was unable to be sent.")
         else:
             await ctx.message.add_reaction("✅")
 

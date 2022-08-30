@@ -47,6 +47,13 @@ class custom_commands(commands.Cog):
             self.__cog_commands__ += (cmd,)
             self.bot.add_command(cmd)
 
+#            @discord.app_commands.command(name=name)
+#            async def appcmd(self, interaction: discord.Interaction):
+#                await interaction.response.send_message(value)
+#
+#            self.bot.tree.add_command(appcmd)
+#            self.bot.tree.sync()
+
         if not name:
             await ctx.send("Please provide a name for the new custom command.")
             return
@@ -120,14 +127,10 @@ class custom_commands(commands.Cog):
                 return
 
         collection.update_one({"name": name}, {"$set": {"description": desc}})
+#        cmd = self.bot.tree.get_command(name)
+#        await cmd.edit(description=desc)
+#        self.bot.tree.sync()
         await ctx.message.add_reaction("✅")
-
-    @commands.command(name="custom-list")
-    async def custom_list(self, ctx):
-        embed = discord.Embed(title="Custom Commands", color=0x00a0a0)
-        for command in collection.find():
-            embed.add_field(name=command['name'], value=command['description'], inline=False)
-        await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(custom_commands(bot))

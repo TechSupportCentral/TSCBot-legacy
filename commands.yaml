@@ -19,7 +19,7 @@ techinfo:
     legacywindows: "Explain why Windows 7 and 8 should not be used"
     vcredist: "Get links to various versions of the Microsoft Visual C++ Redistributable"
     monitor: "Show the proper location to plug in a monitor"
-    m.2: "Show the difference between SATA and NVMe M.2 SSDs using differently keyed M.2 connectors"
+    m2: "Show the difference between SATA and NVMe M.2 SSDs using differently keyed M.2 connectors"
     others: "Many of these commands have been moved to the custom commands system.\nUse `!custom-list` to view all of the custom commands."
 
 misc_desc: "Miscellaneous commands that don't fit in other categories"

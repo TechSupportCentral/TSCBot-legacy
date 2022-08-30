@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from asyncio import run
+import logging
 import os
 import yaml
 import pymongo
@@ -20,6 +21,7 @@ if __name__ == "__main__":
     intents.members = True
     intents.message_content = True
     bot = commands.Bot(command_prefix=config['prefix'], intents=intents, help_command=None)
+    discord.utils.setup_logging(level=logging.INFO)
 
     @bot.event
     async def on_ready():
