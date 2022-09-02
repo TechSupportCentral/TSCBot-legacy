@@ -34,7 +34,6 @@ custom-commands:
     custom-list: "Get a list of custom commands"
     add-custom: "For admins: Add a new custom command"
     remove-custom: "For admins: Remove a custom command"
-    add-custom-description: "For admins: Add a description for a custom command"
 
 moderation_desc: "Commands run by moderators"
 moderation:
