@@ -27,6 +27,16 @@ if __name__ == "__main__":
     async def on_ready():
         print('Logged in as ' + bot.user.name)
 
+    # Since this bot is being run on top of the existing slash command
+    # bot, an error will be logged every time a slash command is run
+    # since it's registered to the same "bot application" but is not in
+    # this bot's command tree. This handler ignores those errors as to
+    # not clutter the log.
+    @bot.tree.error
+    async def on_app_command_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
+        if isinstance(error, discord.app_commands.errors.CommandNotFound):
+            return
+
     async def run_bot():
         async with bot:
             for filename in os.listdir('cogs'):
