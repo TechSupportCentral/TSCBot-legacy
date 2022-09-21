@@ -3,6 +3,7 @@ import discord
 import yaml
 from asyncio import sleep
 from datetime import datetime
+from calendar import timegm
 import re
 from main import get_database
 mongodb = get_database()
@@ -104,10 +105,10 @@ class moderation(commands.Cog):
         if member.name != member.display_name:
             embed.add_field(name="Nickname", value=member.display_name, inline=False)
 
-        created = member.created_at.strftime("%s")
-        joined = member.joined_at.strftime("%s")
-        created_delta = int(discord.utils.utcnow().strftime("%s")) - int(created)
-        joined_delta = int(discord.utils.utcnow().strftime("%s")) - int(joined)
+        created = timegm(member.created_at.timetuple())
+        joined = timegm(member.joined_at.timetuple())
+        created_delta = timegm(discord.utils.utcnow().timetuple()) - created
+        joined_delta = timegm(discord.utils.utcnow().timetuple()) - joined
         if created_delta < 604800:
             created_fancy = await seconds_to_fancytime(created_delta, 2)
         else:
@@ -118,8 +119,8 @@ class moderation(commands.Cog):
             joined_fancy = await seconds_to_fancytime(joined_delta, 1)
         embed.add_field(name="Account Created:", value=f"<t:{created}> ({created_fancy} ago)", inline=True)
         embed.add_field(name="Joined Server:", value=f"<t:{joined}> ({joined_fancy} ago)", inline=True)
-        if int(joined) - int(created) < 604800:
-            embed.add_field(name="Difference between creation and join:", value=await seconds_to_fancytime(int(joined) - int(created), 2), inline=False)
+        if joined - created < 604800:
+            embed.add_field(name="Difference between creation and join:", value=await seconds_to_fancytime(joined - created, 2), inline=False)
 
         mentions = []
         for role in member.roles:
@@ -581,7 +582,7 @@ class moderation(commands.Cog):
         message = await channel.send(embed=embed)
 
         collection = mongodb['moderation']
-        collection.insert_one({"_id": str(message.id), "type": "mute", "user": str(id), "moderator": str(ctx.message.author.id), "start": str(datetime.now().strftime("%s")), "time": str(seconds), "reason": reason})
+        collection.insert_one({"_id": str(message.id), "type": "mute", "user": str(id), "moderator": str(ctx.message.author.id), "start": datetime.now().strftime("%s"), "time": str(seconds), "reason": reason})
 
         dmbed = discord.Embed(title=f"You have been muted for {fancytime}.", description=f"**Reason:** {reason}", color=discord.Color.red())
         if member.dm_channel is None:

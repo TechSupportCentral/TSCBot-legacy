@@ -103,7 +103,7 @@ class misc(commands.Cog):
         fancytime = await seconds_to_fancytime(seconds, gran)
 
         collection = mongodb['reminders']
-        collection.insert_one({"_id": str(ctx.message.id), "text": reminder, "time": fancytime, "user": str(ctx.message.author.id), "end": str(int(datetime.now().strftime("%s")) + seconds)})
+        collection.insert_one({"_id": str(ctx.message.id), "text": reminder, "time": fancytime, "user": str(ctx.message.author.id), "end": str(round(datetime.now().timestamp() + seconds))})
         await ctx.send(f"I will remind you in {fancytime}.")
         await sleep(seconds)
         collection.delete_one({"_id": str(ctx.message.id)})
