@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import yaml
 from asyncio import sleep
-from datetime import datetime
+from time import time
 from calendar import timegm
 import re
 from main import get_database
@@ -107,8 +107,8 @@ class moderation(commands.Cog):
 
         created = timegm(member.created_at.timetuple())
         joined = timegm(member.joined_at.timetuple())
-        created_delta = timegm(discord.utils.utcnow().timetuple()) - created
-        joined_delta = timegm(discord.utils.utcnow().timetuple()) - joined
+        created_delta = round(time() - created)
+        joined_delta = round(time() - joined)
         if created_delta < 604800:
             created_fancy = await seconds_to_fancytime(created_delta, 2)
         else:
@@ -582,7 +582,7 @@ class moderation(commands.Cog):
         message = await channel.send(embed=embed)
 
         collection = mongodb['moderation']
-        collection.insert_one({"_id": str(message.id), "type": "mute", "user": str(id), "moderator": str(ctx.message.author.id), "start": datetime.now().strftime("%s"), "time": str(seconds), "reason": reason})
+        collection.insert_one({"_id": str(message.id), "type": "mute", "user": str(id), "moderator": str(ctx.message.author.id), "start": str(round(time())), "time": str(seconds), "reason": reason})
 
         dmbed = discord.Embed(title=f"You have been muted for {fancytime}.", description=f"**Reason:** {reason}", color=discord.Color.red())
         if member.dm_channel is None:

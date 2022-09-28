@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import yaml
 from asyncio import sleep
-from datetime import datetime
+from time import time
 import re
 from main import get_database
 mongodb = get_database()
@@ -103,12 +103,12 @@ class misc(commands.Cog):
         fancytime = await seconds_to_fancytime(seconds, gran)
 
         collection = mongodb['reminders']
-        collection.insert_one({"_id": str(ctx.message.id), "text": reminder, "time": fancytime, "user": str(ctx.message.author.id), "end": str(round(datetime.now().timestamp() + seconds))})
-        await ctx.send(f"I will remind you in {fancytime}.")
+        collection.insert_one({"_id": str(ctx.message.id), "text": reminder, "time": fancytime, "user": str(ctx.message.author.id), "end": str(round(time())), "seconds": str(seconds)})
+        await ctx.send(f"I will remind you in {fancytime} (<t:{round(time() + seconds)}:F>).")
         await sleep(seconds)
         collection.delete_one({"_id": str(ctx.message.id)})
 
-        embed = discord.Embed(title=f"Reminder from {fancytime} ago:", description=f"{reminder}\n\n[link to original message]({ctx.message.jump_url})", color=0x00a0a0)
+        embed = discord.Embed(title=f"Reminder from <t:{round(time() - seconds)}:F> ({fancytime} ago):", description=f"{reminder}\n\n[link to original message]({ctx.message.jump_url})", color=0x00a0a0)
         if ctx.message.author.dm_channel is None:
             dm = await ctx.message.author.create_dm()
         else:
