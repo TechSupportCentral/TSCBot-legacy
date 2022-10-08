@@ -513,8 +513,10 @@ class moderation(commands.Cog):
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         message = await channel.send(embed=embed)
 
-        collection = mongodb['moderation']
-        collection.insert_one({"_id": str(message.id), "type": "unban", "user": str(id), "moderator": str(ctx.message.author.id), "reason": reason})
+        mod_collection = mongodb['moderation']
+        mod_collection.insert_one({"_id": str(message.id), "type": "unban", "user": str(id), "moderator": str(ctx.message.author.id), "reason": reason})
+        app_collection = mongodb['applications']
+        app_collection.update_one({"id": str(id), "type": "appeal"}, {"$set": {"accepted": "yes"}})
 
         await guild.unban(discord.Object(id=id), reason=reason)
         await ctx.message.add_reaction("✅")
