@@ -522,7 +522,7 @@ class moderation(commands.Cog):
         await ctx.message.add_reaction("✅")
 
     @commands.command()
-    async def mute(self, ctx, user=None, time=None, *, reason=None):
+    async def mute(self, ctx, user=None, mutetime=None, *, reason=None):
         guild = ctx.message.guild
         mod_role = guild.get_role(int(role_ids['moderator']))
         trial_mod_role = guild.get_role(int(role_ids['trial_mod']))
@@ -553,15 +553,15 @@ class moderation(commands.Cog):
             await ctx.send("You cannot mute bots.")
             return
 
-        if not time:
-            time = "12h"
+        if not mutetime:
+            mutetime = "12h"
         gran = 0
-        for char in time:
+        for char in mutetime:
             gran += char.isalpha()
         if gran > 4:
             await ctx.send("Please mention the time to mute in a format like `1d2h3m4s` (1 day, 2 hours, 3 minutes, 4 seconds).")
             return
-        cooltime = [int(a[ :-1]) if a else b for a,b in zip(re.search('(\d+d)?(\d+h)?(\d+m)?(\d+s)?', time).groups(), [0, 0, 0, 0])]
+        cooltime = [int(a[ :-1]) if a else b for a,b in zip(re.search('(\d+d)?(\d+h)?(\d+m)?(\d+s)?', mutetime).groups(), [0, 0, 0, 0])]
         seconds = cooltime[0]*86400 + cooltime[1]*3600 + cooltime[2]*60 + cooltime[3]
         fancytime = await seconds_to_fancytime(seconds, gran)
 

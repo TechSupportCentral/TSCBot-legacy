@@ -86,19 +86,19 @@ class misc(commands.Cog):
         await ctx.send("The moderators have been alerted.")
 
     @commands.command()
-    async def remindme(self, ctx, time=None, *, reminder=None):
-        if not time:
+    async def remindme(self, ctx, total=None, *, reminder=None):
+        if not total:
             await ctx.send("Please specify the time you would like to be reminded in.")
             return
         if not reminder:
             reminder = "No description provided."
         gran = 0
-        for char in time:
+        for char in total:
             gran += char.isalpha()
         if gran > 4:
             await ctx.send("The time you mentioned for me to remind you in is not in the correct format.\nIt should look something like `1d2h3m4s` (1 day, 2 hours, 3 minutes, and 4 seconds).")
             return
-        cooltime = [int(a[ :-1]) if a else b for a,b in zip(re.search('(\d+d)?(\d+h)?(\d+m)?(\d+s)?', time).groups(), [0, 0, 0, 0])]
+        cooltime = [int(a[ :-1]) if a else b for a,b in zip(re.search('(\d+d)?(\d+h)?(\d+m)?(\d+s)?', total).groups(), [0, 0, 0, 0])]
         seconds = cooltime[0]*86400 + cooltime[1]*3600 + cooltime[2]*60 + cooltime[3]
         fancytime = await seconds_to_fancytime(seconds, gran)
 
