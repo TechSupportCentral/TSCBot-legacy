@@ -109,11 +109,7 @@ class misc(commands.Cog):
         collection.delete_one({"_id": str(ctx.message.id)})
 
         embed = discord.Embed(title=f"Reminder from <t:{round(time() - seconds)}:F> ({fancytime} ago):", description=f"{reminder}\n\n[link to original message]({ctx.message.jump_url})", color=0x00a0a0)
-        if ctx.message.author.dm_channel is None:
-            dm = await ctx.message.author.create_dm()
-        else:
-            dm = ctx.message.author.dm_channel
-        await dm.send(embed=embed)
+        await ctx.message.author.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(misc(bot))

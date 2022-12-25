@@ -218,12 +218,8 @@ class moderation(commands.Cog):
         collection.insert_one({"_id": str(message.id), "type": "warn", "user": str(id), "moderator": str(ctx.message.author.id), "reason": reason})
 
         dmbed = discord.Embed(title="You have been warned.", description=f"**Reason:** {reason}", color=discord.Color.red())
-        if member.dm_channel is None:
-            dm = await member.create_dm()
-        else:
-            dm = member.dm_channel
         try:
-            await dm.send(embed=dmbed)
+            await member.send(embed=dmbed)
         except:
             await ctx.send("The member was warned successfully, but a DM was unable to be sent.")
             return
@@ -273,12 +269,8 @@ class moderation(commands.Cog):
         dmbed = discord.Embed(title="Your warning has been removed.", color=discord.Color.green())
         dmbed.add_field(name="Original reason for warn", value=og_reason, inline=False)
         dmbed.add_field(name="Reason for removal", value=reason, inline=False)
-        if member.dm_channel is None:
-            dm = await member.create_dm()
-        else:
-            dm = member.dm_channel
         try:
-            await dm.send(embed=dmbed)
+            await member.send(embed=dmbed)
         except:
             await ctx.send("The warn was removed successfully, but a DM was unable to be sent to the original warned user.")
             return
@@ -336,12 +328,8 @@ class moderation(commands.Cog):
         dmbed = discord.Embed(title="Your warning has been updated.", color=0x00a0a0)
         dmbed.add_field(name="Original reason", value=og_reason, inline=False)
         dmbed.add_field(name="New reason", value=reason, inline=False)
-        if member.dm_channel is None:
-            dm = await member.create_dm()
-        else:
-            dm = member.dm_channel
         try:
-            await dm.send(embed=dmbed)
+            await member.send(embed=dmbed)
         except:
             await ctx.send("The reason was updated successfully, but a DM was unable to be sent to the warned user.")
             return
@@ -395,13 +383,9 @@ class moderation(commands.Cog):
         collection.insert_one({"_id": str(message.id), "type": "kick", "user": str(id), "moderator": str(ctx.message.author.id), "reason": reason})
 
         dmbed = discord.Embed(title="You have been kicked.", description=f"**Reason:** {reason}", color=discord.Color.red())
-        if member.dm_channel is None:
-            dm = await member.create_dm()
-        else:
-            dm = member.dm_channel
         dm_failed = False
         try:
-            await dm.send(embed=dmbed)
+            await member.send(embed=dmbed)
         except:
             dm_failed = True
 
@@ -465,12 +449,8 @@ class moderation(commands.Cog):
 
         dmbed = discord.Embed(title="You have been banned.", description=f"**Reason:** {reason}", color=discord.Color.red())
         dmbed.set_footer(text="You can appeal your ban at https://www.techsupportcentral.cf/appeal.php")
-        if member.dm_channel is None:
-            dm = await member.create_dm()
-        else:
-            dm = member.dm_channel
         try:
-            await dm.send(embed=dmbed)
+            await member.send(embed=dmbed)
         except:
             pass
 
@@ -587,13 +567,9 @@ class moderation(commands.Cog):
         collection.insert_one({"_id": str(message.id), "type": "mute", "user": str(id), "moderator": str(ctx.message.author.id), "start": str(round(time())), "time": str(seconds), "reason": reason})
 
         dmbed = discord.Embed(title=f"You have been muted for {fancytime}.", description=f"**Reason:** {reason}", color=discord.Color.red())
-        if member.dm_channel is None:
-            dm = await member.create_dm()
-        else:
-            dm = member.dm_channel
         dm_failed = False
         try:
-            await dm.send(embed=dmbed)
+            await member.send(embed=dmbed)
         except:
             dm_failed = True
 
@@ -611,7 +587,7 @@ class moderation(commands.Cog):
         dmbed2 = discord.Embed(title="You have been automatically unmuted.", color=discord.Color.green())
         dm2_failed = False
         try:
-            await dm.send(embed=dmbed2)
+            await member.send(embed=dmbed2)
         except:
             dm2_failed = True
 
@@ -671,13 +647,9 @@ class moderation(commands.Cog):
         collection.insert_one({"_id": str(message.id), "type": "unmute", "user": str(id), "moderator": str(ctx.message.author.id), "reason": reason})
 
         dmbed = discord.Embed(title="You have been unmuted.", description=f"**Reason:** {reason}", color=discord.Color.green())
-        if member.dm_channel is None:
-            dm = await member.create_dm()
-        else:
-            dm = member.dm_channel
         dm_failed = False
         try:
-            await dm.send(embed=dmbed)
+            await member.send(embed=dmbed)
         except:
             dm_failed = True
 

@@ -2,7 +2,6 @@ from discord.ext import commands
 import discord
 import yaml
 import re
-#from emoji import emoji_count
 from main import get_database
 mongodb = get_database()
 
@@ -60,36 +59,6 @@ class administration(commands.Cog):
             description += f"\n{swear['swear']}"
         embed = discord.Embed(title="Swearlist", description=description, color=0x00a0a0)
         await ctx.send(embed=embed)
-
-#    @commands.command(name="add-reaction-role")
-#    async def add_reaction_role(self, ctx, role=None, reaction=None, *, message=None):
-#        if not role:
-#            await ctx.send("Please provide the ID of the role to add.")
-#            return
-#        if not reaction:
-#            await ctx.send("Please provide the emoji to use as a reaction.")
-#            return
-#        if not message:
-#            await ctx.send("Please provide the contents of the reaction role message.")
-#            return
-#
-#        if not ctx.message.guild.get_role(int(role)):
-#            await ctx.send("Not a valid role.")
-#            return
-#
-#        if emoji_count(reaction) != 1:
-#            await ctx.send("Not a valid emoji.")
-#            return
-#
-#        channel = self.bot.get_channel(int(channel_ids['reaction_roles']))
-#        message = await channel.send(message)
-#        await message.add_reaction(reaction)
-#
-#        collection = mongodb['reaction-roles']
-#        collection.insert_one({"_id": str(message.id), "role": role, "emoji": reaction})
-#
-#        await ctx.message.add_reaction("✅")
-#        await ctx.send("reload reaction roles")
 
     @commands.command()
     async def softban(self, ctx, user=None):
