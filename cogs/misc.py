@@ -48,7 +48,7 @@ class misc(commands.Cog):
 
         if not arg:
             embed = discord.Embed(title="Command List", description="Commands come in categories. Here is a list of categories, run `!commands <category>` to see the commands in a certain category.", color=0x00a0a0)
-            embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar)
+            embed.set_author(name=ctx.author.global_name, icon_url=ctx.author.display_avatar)
             for category in commands:
                 if not '_desc' in category:
                     embed.add_field(name=category + ':', value=commands[category + '_desc'], inline=True)
@@ -65,7 +65,7 @@ class misc(commands.Cog):
                 await ctx.send("The `administration` category can only be viewed by admins.")
                 return
             embed = discord.Embed(title="Command List", description=f"Commands in the {arg} category:", color=0x00a0a0)
-            embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar)
+            embed.set_author(name=ctx.author.global_name, icon_url=ctx.author.display_avatar)
             for command in commands[arg]:
                 embed.add_field(name=command + ':', value=commands[arg][command], inline=False)
             await ctx.send(embed=embed)
@@ -79,7 +79,7 @@ class misc(commands.Cog):
         else:
             alert = "A description was not provided."
         embed = discord.Embed(title="Moderator Alert", description=f"[Jump to message]({ctx.message.jump_url})\n{alert}", color=discord.Color.red())
-        embed.add_field(name="Alert Author", value=ctx.message.author, inline=True)
+        embed.add_field(name="Alert Author", value=ctx.message.author.name, inline=True)
         embed.add_field(name="User ID", value=ctx.message.author.id, inline=True)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         await channel.send(f"<@&{role_ids['moderator']}> <@&{role_ids['trial_mod']}>", embed=embed)

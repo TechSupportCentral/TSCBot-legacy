@@ -69,7 +69,7 @@ class moderation(commands.Cog):
         await ctx.channel.purge(limit=num + 1)
         embed=discord.Embed(title=f"{num} Messages Deleted", color=discord.Color.red())
         embed.set_thumbnail(url=ctx.message.author.display_avatar)
-        embed.add_field(name="Deleted by", value=ctx.message.author, inline=True)
+        embed.add_field(name="Deleted by", value=ctx.message.author.global_name, inline=True)
         embed.add_field(name="In channel", value=ctx.message.channel.mention, inline=True)
         embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
@@ -99,7 +99,10 @@ class moderation(commands.Cog):
             return
 
         member = guild.get_member(id)
-        embed=discord.Embed(title=member, color=0x00a0a0)
+        if member.discriminator == "0":
+            embed = discord.Embed(title=member.name, color=0x00a0a0)
+        else:
+            embed = discord.Embed(title=member, color=0x00a0a0)
         embed.set_thumbnail(url=member.display_avatar)
         embed.add_field(name="User ID", value=id, inline=False)
         if member.name != member.display_name:
@@ -153,7 +156,7 @@ class moderation(commands.Cog):
         if guild.get_member(id) is None:
             description = ""
         else:
-            description = f"**User:** {guild.get_member(id)}\n"
+            description = f"**User:** {guild.get_member(id).name}\n"
 
         collection = mongodb['moderation']
         found = False
@@ -195,7 +198,7 @@ class moderation(commands.Cog):
         member = guild.get_member(id)
 
         if member.top_role.position > ctx.message.author.top_role.position:
-            await ctx.send(f"{member} is higher than you in the role hierarchy, cannot warn.")
+            await ctx.send(f"{member.global_name} is higher than you in the role hierarchy, cannot warn.")
             return
         if member.bot:
             await ctx.send("You cannot warn bots.")
@@ -208,9 +211,9 @@ class moderation(commands.Cog):
         message = await channel.send(".")
         embed = discord.Embed(title="Warning", description=f"Use `!unwarn {message.id} <reason>` to remove this warning. Note: This is not the user's ID, rather the ID of this message.", color=discord.Color.red())
         embed.set_thumbnail(url=member.display_avatar)
-        embed.add_field(name="User warned", value=member, inline=True)
+        embed.add_field(name="User warned", value=member.name, inline=True)
         embed.add_field(name="User ID", value=str(id), inline=True)
-        embed.add_field(name="Moderator", value=ctx.message.author, inline=False)
+        embed.add_field(name="Moderator", value=ctx.message.author.global_name, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         await message.edit(content="", embed=embed)
 
@@ -259,9 +262,9 @@ class moderation(commands.Cog):
         member = guild.get_member(int(user))
         embed = discord.Embed(title="Warning Removed", color=discord.Color.green())
         embed.set_thumbnail(url=member.display_avatar)
-        embed.add_field(name="User unwarned", value=member, inline=True)
+        embed.add_field(name="User unwarned", value=member.name, inline=True)
         embed.add_field(name="User ID", value=user, inline=True)
-        embed.add_field(name="Moderator", value=ctx.message.author, inline=False)
+        embed.add_field(name="Moderator", value=ctx.message.author.global_name, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         await channel.send(embed=embed)
@@ -361,7 +364,7 @@ class moderation(commands.Cog):
         member = guild.get_member(id)
 
         if member.top_role.position >= ctx.message.author.top_role.position:
-            await ctx.send(f"{member} is higher than or equal to you in the role hierarchy, cannot kick.")
+            await ctx.send(f"{member.global_name} is higher than or equal to you in the role hierarchy, cannot kick.")
             return
         if member.bot and owner_role not in ctx.message.author.roles:
             await ctx.send("You do not have permission to kick bots.")
@@ -372,9 +375,9 @@ class moderation(commands.Cog):
 
         embed = discord.Embed(title="Kick", color=discord.Color.red())
         embed.set_thumbnail(url=member.display_avatar)
-        embed.add_field(name="User kicked", value=member, inline=True)
+        embed.add_field(name="User kicked", value=member.name, inline=True)
         embed.add_field(name="User ID", value=str(id), inline=True)
-        embed.add_field(name="Moderator", value=ctx.message.author, inline=False)
+        embed.add_field(name="Moderator", value=ctx.message.author.global_name, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         message = await channel.send(embed=embed)
@@ -426,7 +429,7 @@ class moderation(commands.Cog):
 
         if guild.get_member(id) is not None:
             if member.top_role.position >= ctx.message.author.top_role.position:
-                await ctx.send(f"{member} is higher than or equal to you in the role hierarchy, cannot ban.")
+                await ctx.send(f"{member.global_name} is higher than or equal to you in the role hierarchy, cannot ban.")
                 return
             if member.bot and owner_role not in ctx.message.author.roles:
                 await ctx.send("You do not have permission to ban bots.")
@@ -437,9 +440,9 @@ class moderation(commands.Cog):
 
         embed = discord.Embed(title="Ban", color=discord.Color.red())
         embed.set_thumbnail(url=member.display_avatar)
-        embed.add_field(name="User banned", value=member, inline=True)
+        embed.add_field(name="User banned", value=member.name, inline=True)
         embed.add_field(name="User ID", value=str(id), inline=True)
-        embed.add_field(name="Moderator", value=ctx.message.author, inline=False)
+        embed.add_field(name="Moderator", value=ctx.message.author.global_name, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         message = await channel.send(embed=embed)
@@ -486,9 +489,9 @@ class moderation(commands.Cog):
 
         embed = discord.Embed(title="Ban Removed", color=discord.Color.green())
         embed.set_thumbnail(url=member.display_avatar)
-        embed.add_field(name="User unbanned", value=member, inline=True)
+        embed.add_field(name="User unbanned", value=member.name, inline=True)
         embed.add_field(name="User ID", value=str(id), inline=True)
-        embed.add_field(name="Moderator", value=ctx.message.author, inline=False)
+        embed.add_field(name="Moderator", value=ctx.message.author.global_name, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         message = await channel.send(embed=embed)
@@ -527,7 +530,7 @@ class moderation(commands.Cog):
         member = guild.get_member(id)
 
         if member.top_role.position >= ctx.message.author.top_role.position:
-            await ctx.send(f"{member} is higher than or equal to you in the role hierarchy, cannot mute.")
+            await ctx.send(f"{member.global_name} is higher than or equal to you in the role hierarchy, cannot mute.")
             return
         if member.bot:
             await ctx.send("You cannot mute bots.")
@@ -550,14 +553,14 @@ class moderation(commands.Cog):
 
         muted_role = guild.get_role(int(role_ids['muted']))
         if muted_role in member.roles:
-            await ctx.send(f"{member} is already muted.")
+            await ctx.send(f"{member.name} is already muted.")
             return
 
         embed = discord.Embed(title="Mute", color=discord.Color.red())
         embed.set_thumbnail(url=member.display_avatar)
-        embed.add_field(name="User muted", value=member, inline=True)
+        embed.add_field(name="User muted", value=member.name, inline=True)
         embed.add_field(name="User ID", value=str(id), inline=True)
-        embed.add_field(name="Moderator", value=ctx.message.author, inline=False)
+        embed.add_field(name="Moderator", value=ctx.message.author.global_name, inline=False)
         embed.add_field(name="Time muted", value=fancytime, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
@@ -574,9 +577,9 @@ class moderation(commands.Cog):
             dm_failed = True
 
         if dm_failed:
-            await ctx.send(f"{member} was muted for {fancytime}. A DM was unable to be sent.")
+            await ctx.send(f"{member.name} was muted for {fancytime}. A DM was unable to be sent.")
         else:
-            await ctx.send(f"{member} was muted for {fancytime}.")
+            await ctx.send(f"{member.name} was muted for {fancytime}.")
             await ctx.message.add_reaction("✅")
 
         await member.add_roles(muted_role)
@@ -593,7 +596,7 @@ class moderation(commands.Cog):
 
         embed2 = discord.Embed(title="Mute Removed", color=discord.Color.green())
         embed2.set_thumbnail(url=member.display_avatar)
-        embed2.add_field(name="User unmuted", value=member, inline=True)
+        embed2.add_field(name="User unmuted", value=member.name, inline=True)
         embed2.add_field(name="User ID", value=str(id), inline=True)
         embed2.add_field(name="Reason", value="Automatic unmute", inline=False)
         if dm2_failed:
@@ -631,14 +634,14 @@ class moderation(commands.Cog):
 
         muted_role = guild.get_role(int(role_ids['muted']))
         if not muted_role in member.roles:
-            await ctx.send(f"{member} is not muted.")
+            await ctx.send(f"{member.name} is not muted.")
             return
 
         embed = discord.Embed(title="Mute Removed", color=discord.Color.green())
         embed.set_thumbnail(url=member.display_avatar)
-        embed.add_field(name="User unmuted", value=member, inline=True)
+        embed.add_field(name="User unmuted", value=member.name, inline=True)
         embed.add_field(name="User ID", value=str(id), inline=True)
-        embed.add_field(name="Moderator", value=ctx.message.author, inline=False)
+        embed.add_field(name="Moderator", value=ctx.message.author.global_name, inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         channel = self.bot.get_channel(int(channel_ids['modlog']))
         message = await channel.send(embed=embed)
