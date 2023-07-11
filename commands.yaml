@@ -14,6 +14,8 @@ techinfo:
     driver-managers: "Explain why third party driver managers should not be used"
     bootkeys: "Get a list of keys used to get into the BIOS Boot Menu"
     windowsusb: "Get instructions on how to install or reinstall Windows 10"
+    macwinusb: "Get instructions on how to create a bootable Windows USB on macOS 11+"
+    osxwinusb: "Get instructions on how to create a bootable Windows USB on Mac OS X"
     linuxusb: "Get instructions on how to create a bootable Linux USB"
     androidusb: "Get instructions on how to flash a Linux ISO to USB on Android"
     legacywindows: "Explain why Windows 7 and 8 should not be used"
