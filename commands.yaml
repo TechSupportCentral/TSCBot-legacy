@@ -18,6 +18,7 @@ techinfo:
     osxwinusb: "Get instructions on how to create a bootable Windows USB on Mac OS X"
     linuxusb: "Get instructions on how to create a bootable Linux USB"
     androidusb: "Get instructions on how to flash a Linux ISO to USB on Android"
+    windowsrepair: "Get instructions on how to run the system file checker in Windows"
     legacywindows: "Explain why Windows 7 and 8 should not be used"
     vcredist: "Get links to various versions of the Microsoft Visual C++ Redistributable"
     monitor: "Show the proper location to plug in a monitor"
